@@ -1,0 +1,10 @@
+{
+    "files": [
+        "typings/main.d.ts",
+        "typings/browser.d.ts",
+        "src/App.ts",
+        "src/iRoute.ts",
+        "src/Route.ts",
+        "src/RouteMapper.ts"
+    ]
+}

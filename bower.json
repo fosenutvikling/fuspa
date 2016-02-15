@@ -1,0 +1,27 @@
+{
+    "name": "spa",
+    "authors": [
+        "Jonas Kirkemyr <jonas@kirkemyr.no>"
+    ],
+    "description": "Single-Page-Application classes for listening for hash change, and adding routes",
+    "main": "",
+    "moduleType": [
+        "node"
+    ],
+    "keywords": [
+        "spa",
+        "ts"
+    ],
+    "license": "MIT",
+    "homepage": "",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "hasher": "^1.2.0"
+    }
+}
