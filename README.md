@@ -109,3 +109,24 @@ When the url visiting matches `#/home`, the HomeRoute is triggered. For defining
 ### Extend Route
 
 Own route classes can be specified as well if more functionality is wanted by implementing the `iRoute` interface, or extending the `Route` class.
+
+
+### REST
+
+Example of using Rest within the application.
+
+```js
+var rest=new Spa.Rest("http://localhost");
+rest.headers = {
+            "x-access-token": this.credentials.credentials.token,
+            'Access-Control-Allow-Origin': '*'
+        };
+rest.setError(function (error) {
+            if (error.code == 401) //user not authorized..
+            { //and should be redirected to the login page
+                //TODO: redirect login
+                return;
+            }
+        });
+
+```

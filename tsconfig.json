@@ -5,6 +5,7 @@
         "src/App.ts",
         "src/iRoute.ts",
         "src/Route.ts",
-        "src/RouteMapper.ts"
+        "src/RouteMapper.ts",
+        "src/Rest.ts"
     ]
 }

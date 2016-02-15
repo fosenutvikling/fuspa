@@ -16,6 +16,46 @@ declare module Spa {
         static renderErrorPage(): void;
     }
 }
+declare class Rest {
+    private url;
+    private headers;
+    private type;
+    private error;
+    constructor(url: string, type?: string);
+    setError(error: Function): void;
+    addHeader(key: string, value: string): void;
+    setHeader(headers: Object): void;
+    getHeaders(): Object;
+    /**
+      * do a GET request to given path of the global URL defined for the class
+      * @param  {string}   path the path which to do a get request
+      * @param  {object}   data that should be sent with request
+      * @param  {Function} next function to run when request is done
+      */
+    get(path: string, data: Object, next: Function): void;
+    /**
+     * do a POST request to given path of the global URL defined for the class
+     * @param  {string}   path the path which to do a get request
+     * @param  {object}   data that should be sent with request
+     * @param  {Function} next function to run when request is done
+     */
+    post(path: string, data: Object, next: Function): void;
+    /**
+     * do a PUT request to given path of the global URL defined for the class
+     * @param  {string}   path the path which to do a get request
+     * @param  {object}   data that should be sent with request
+     * @param  {Function} next function to run when request is done
+     */
+    put(path: string, data: Object, next: Function): void;
+    /**
+     * do a DELETE request to given path of the global URL defined for the class
+     * @param  {string}   path the path which to do a get request
+     * @param  {object}   data that should be sent with request
+     * @param  {Function} next function to run when request is done
+     */
+    delete(path: string, data: Object, next: Function): void;
+    request(type: string, path: string, data: Object, next: Function): void;
+}
 declare module Spa {
     abstract class Route implements Spa.iRoute {
         private route;
