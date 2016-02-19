@@ -1,5 +1,7 @@
 module Spa {
     export class RouteMapper {
+        
+        public static runOnNextChange:Function=null;
 
         static init(): void {
 
@@ -38,6 +40,10 @@ module Spa {
         }
 
         static hashChange(newHash: string, oldHash: string): void {
+            if(RouteMapper.runOnNextChange!==null){
+                RouteMapper.runOnNextChange();
+                RouteMapper.runOnNextChange=null;
+            }
             crossroads.parse(newHash);
         }
 

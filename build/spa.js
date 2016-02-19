@@ -36,103 +36,107 @@ var Spa;
     })();
     Spa.App = App;
 })(Spa || (Spa = {}));
-var Rest = (function () {
-    function Rest(url, type) {
-        if (type === void 0) { type = "json"; }
-        this.url = url;
-        this.headers = {};
-        this.type = type;
-        this.error = null;
-    }
-    Rest.prototype.setError = function (error) {
-        this.error = error;
-    };
-    Rest.prototype.addHeader = function (key, value) {
-        this.headers[key] = value;
-    };
-    Rest.prototype.setHeader = function (headers) {
-        this.headers = headers;
-    };
-    Rest.prototype.getHeaders = function () {
-        return this.headers;
-    };
-    /**
-      * do a GET request to given path of the global URL defined for the class
-      * @param  {string}   path the path which to do a get request
-      * @param  {object}   data that should be sent with request
-      * @param  {Function} next function to run when request is done
-      */
-    Rest.prototype.get = function (path, data, next) {
-        this.request("GET", path, data, next);
-    };
-    /**
-     * do a POST request to given path of the global URL defined for the class
-     * @param  {string}   path the path which to do a get request
-     * @param  {object}   data that should be sent with request
-     * @param  {Function} next function to run when request is done
-     */
-    Rest.prototype.post = function (path, data, next) {
-        this.request("POST", path, data, next);
-    };
-    /**
-     * do a PUT request to given path of the global URL defined for the class
-     * @param  {string}   path the path which to do a get request
-     * @param  {object}   data that should be sent with request
-     * @param  {Function} next function to run when request is done
-     */
-    Rest.prototype.put = function (path, data, next) {
-        this.request("PUT", path, data, next);
-    };
-    /**
-     * do a DELETE request to given path of the global URL defined for the class
-     * @param  {string}   path the path which to do a get request
-     * @param  {object}   data that should be sent with request
-     * @param  {Function} next function to run when request is done
-     */
-    Rest.prototype.delete = function (path, data, next) {
-        this.request("DELETE", path, data, next);
-    };
-    Rest.prototype.request = function (type, path, data, next) {
-        //TODO: check if data is empty
-        var self = this;
-        $.ajax({
-            url: this.url + path,
-            type: type,
-            data: data,
-            dataType: this.type,
-            contentType: "application/json",
-            headers: this.headers,
-            success: function (result) {
-                if (result)
-                    next(result);
-                else {
-                    var error = {
-                        code: 100,
-                        message: "Error with data",
+var Spa;
+(function (Spa) {
+    var Rest = (function () {
+        function Rest(url, type) {
+            if (type === void 0) { type = "json"; }
+            this.url = url;
+            this.headers = {};
+            this.type = type;
+            this.error = null;
+        }
+        Rest.prototype.setError = function (error) {
+            this.error = error;
+        };
+        Rest.prototype.addHeader = function (key, value) {
+            this.headers[key] = value;
+        };
+        Rest.prototype.setHeader = function (headers) {
+            this.headers = headers;
+        };
+        Rest.prototype.getHeaders = function () {
+            return this.headers;
+        };
+        /**
+          * do a GET request to given path of the global URL defined for the class
+          * @param  {string}   path the path which to do a get request
+          * @param  {object}   data that should be sent with request
+          * @param  {Function} next function to run when request is done
+          */
+        Rest.prototype.get = function (path, data, next) {
+            this.request("GET", path, data, next);
+        };
+        /**
+         * do a POST request to given path of the global URL defined for the class
+         * @param  {string}   path the path which to do a get request
+         * @param  {object}   data that should be sent with request
+         * @param  {Function} next function to run when request is done
+         */
+        Rest.prototype.post = function (path, data, next) {
+            this.request("POST", path, data, next);
+        };
+        /**
+         * do a PUT request to given path of the global URL defined for the class
+         * @param  {string}   path the path which to do a get request
+         * @param  {object}   data that should be sent with request
+         * @param  {Function} next function to run when request is done
+         */
+        Rest.prototype.put = function (path, data, next) {
+            this.request("PUT", path, data, next);
+        };
+        /**
+         * do a DELETE request to given path of the global URL defined for the class
+         * @param  {string}   path the path which to do a get request
+         * @param  {object}   data that should be sent with request
+         * @param  {Function} next function to run when request is done
+         */
+        Rest.prototype.delete = function (path, data, next) {
+            this.request("DELETE", path, data, next);
+        };
+        Rest.prototype.request = function (type, path, data, next) {
+            //TODO: check if data is empty
+            var self = this;
+            $.ajax({
+                url: this.url + path,
+                type: type,
+                data: data,
+                dataType: this.type,
+                contentType: "application/json",
+                headers: this.headers,
+                success: function (result) {
+                    if (result)
+                        next(result);
+                    else {
+                        var error = {
+                            code: 100,
+                            message: "Error with data",
+                            path: path
+                        };
+                        if (self.error !== null)
+                            self.error(error);
+                        else
+                            next(null, error);
+                    }
+                },
+                error: function (error) {
+                    //generate error object from recieved error msg, to only return data of interest
+                    var errorObj = {
+                        code: error.status,
+                        message: error.statusText,
                         path: path
                     };
                     if (self.error !== null)
-                        self.error(error);
+                        self.error(errorObj);
                     else
-                        next(null, error);
+                        next(null, errorObj);
                 }
-            },
-            error: function (error) {
-                //generate error object from recieved error msg, to only return data of interest
-                var errorObj = {
-                    code: error.status,
-                    message: error.statusText,
-                    path: path
-                };
-                if (self.error !== null)
-                    self.error(errorObj);
-                else
-                    next(null, errorObj);
-            }
-        });
-    };
-    return Rest;
-})();
+            });
+        };
+        return Rest;
+    })();
+    Spa.Rest = Rest;
+})(Spa || (Spa = {}));
 var Spa;
 (function (Spa) {
     var Route = (function () {
@@ -197,8 +201,13 @@ var Spa;
             crossroads.addRoute(path, func);
         };
         RouteMapper.hashChange = function (newHash, oldHash) {
+            if (RouteMapper.runOnNextChange !== null) {
+                RouteMapper.runOnNextChange();
+                RouteMapper.runOnNextChange = null;
+            }
             crossroads.parse(newHash);
         };
+        RouteMapper.runOnNextChange = null;
         return RouteMapper;
     })();
     Spa.RouteMapper = RouteMapper;
