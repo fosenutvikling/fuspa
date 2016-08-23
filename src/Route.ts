@@ -1,41 +1,43 @@
-module Spa {
-    export abstract class Route implements Spa.iRoute {
-        private route: string;//the url path of the current route
-        private title: string;//title of current route
-        container: string;//container which should replace the dynamic html-page
+import {iRoute} from './iRoute';
+import {RouteMapper} from './RouteMapper';
+import {App} from './App';
 
-        constructor(route: string) {
-            this.route = route;
-            this.title = null;
-        }
+export abstract class Route implements iRoute {
+    private route: string;//the url path of the current route
+    private title: string;//title of current route
+    container: string;//container which should replace the dynamic html-page
 
-        setRouteTitle(title: string) {
-            this.title = title;
-        }
+    constructor(route: string) {
+        this.route = route;
+        this.title = null;
+    }
 
-        getRouteTitle(): string {
-            return this.title;
-        }
+    setRouteTitle(title: string) {
+        this.title = title;
+    }
 
-        getRoute(): string {
-            return this.route;
-        }
-        
-        /**
-         * Initializes routes
-         */
-        abstract initRoutes();
+    getRouteTitle(): string {
+        return this.title;
+    }
 
-        addRoute(path: string, func: Function) {
-            RouteMapper.addRoute(this.route + path, func);
-        }
-        
-        /**
-         * Renders a hbs template file, defined in views folder:
-         * views/templates/pages/*
-         */
-        render(template: string) {
-            App.generateHtml(null, 'pages/' + template);
-        }
+    getRoute(): string {
+        return this.route;
+    }
+
+    /**
+     * Initializes routes
+     */
+    abstract initRoutes();
+
+    addRoute(path: string, func: Function) {
+        RouteMapper.addRoute(this.route + path, func);
+    }
+
+    /**
+     * Renders a hbs template file, defined in views folder:
+     * views/templates/pages/*
+     */
+    render(template: string) {
+        App.generateHtml(null, 'pages/' + template);
     }
 }
