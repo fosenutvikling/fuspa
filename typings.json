@@ -1,13 +1,10 @@
 {
   "name": "spa",
   "dependencies": {},
-  "devDependencies": {},
-  "ambientDependencies": {
-    "crossroads": "github:DefinitelyTyped/DefinitelyTyped/crossroads/crossroads.d.ts#db86358f82ff71cd0e22c7c707f6ef16c4ebcd86",
-    "hasher": "github:DefinitelyTyped/DefinitelyTyped/hasher/hasher.d.ts#e294be52255e83f28376b2d8c88023971566805a",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#fab0b336b0414fac23963bde83f7d7077f6cf14c"
-  },
-  "ambientDevDependencies": {
-    "js-signals": "github:DefinitelyTyped/DefinitelyTyped/js-signals/js-signals.d.ts#a7ee9ec55f70644adc68dfe26434673e2834821f"
+  "globalDependencies": {
+    "crossroads": "registry:dt/crossroads#0.0.0+20160317120654",
+    "hasher": "registry:dt/hasher#0.0.0+20160317120654",
+    "js-signals": "registry:dt/js-signals#0.0.0+20160316155526",
+    "node": "registry:dt/node#6.0.0+20160818175514"
   }
 }

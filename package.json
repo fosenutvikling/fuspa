@@ -1,33 +1,38 @@
 {
-    "name": "spa",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "build": "rm -rf dist && grunt build",
-        "prepublish": "typings install && npm run build",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-        "spa",
-        "ts"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/jonaskirkemyr/spa.git"
-    },
-    "author": "Jonas Kirkemyr <jonas@kirkemyr.no>",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/jonaskirkemyr/spa/issues"
-    },
-    "homepage": "https://github.com/jonaskirkemyr/spa#readme",
-    "dependencies": {
-        "crossroads": "^0.12.2"
-    },
-    "devDependencies": {
-        "grunt": "^0.4.5",
-        "grunt-contrib-uglify": "^0.11.1",
-        "grunt-typescript": "^0.8.0"
-    }
+  "name": "spa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/spa.min.js",
+  "typings": "dist/spa.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && grunt build",
+    "prepublish": "typings install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spa",
+    "ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jonaskirkemyr/spa.git"
+  },
+  "author": "Jonas Kirkemyr <jonas@kirkemyr.no>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jonaskirkemyr/spa/issues"
+  },
+  "homepage": "https://github.com/jonaskirkemyr/spa#readme",
+  "dependencies": {
+    "crossroads": "^0.12.2"
+  },
+  "devDependencies": {
+    "dts-generator": "^1.7.0",
+    "grunt": "^0.4.5",
+    "grunt-webpack": "^1.0.14",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.8.10",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.14.1"
+  }
 }
