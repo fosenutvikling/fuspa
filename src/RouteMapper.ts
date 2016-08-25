@@ -1,4 +1,5 @@
 import * as crossroads from 'crossroads';
+import * as hasher from 'hasher';
 
 export class RouteMapper {
 
