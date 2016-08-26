@@ -96,17 +96,16 @@ export class HttpClient {
         var request: http.ClientRequest;
         var self = this;
 
-        
+
 
         // Generate options for creating a request against the specified url-endpoint
         var options: http.RequestOptions = {
             hostname: this.url,
-            host:this.url,
             port: this.options.port,
             path: path,
             method: type,
             headers: this.headers,
-            protocol: this.options.protocol,
+            protocol: this.options.protocol + ':', // Module requires the protocol to be specified with an ending colon, to prevent appending the local ip-address of the current running client to the request
             agent: this.keepAliveAgent
         };
 
@@ -134,8 +133,6 @@ export class HttpClient {
     }
 
     private responseHandler(response: http.IncomingMessage, next: Function) {
-        response.setEncoding('utf8');
-
         var data: any;
         var self = this;
 
