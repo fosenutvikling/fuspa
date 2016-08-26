@@ -19,6 +19,8 @@ export class HttpClient {
 
     private error: Function;//function to run on error with request
 
+    private keepAliveAgent;
+
     constructor(url: string, options: iOptions = { protocol: 'http', encoding: 'utf8', error: null }) {
 
         if (options.protocol === undefined)
@@ -30,6 +32,8 @@ export class HttpClient {
         this.headers = {};
         this.options = options;
         this.error = options.error;
+
+        this.keepAliveAgent = new http.Agent({ keepAlive: true }); // Use same instance for doing requests
     }
 
     setError(error: Function) {
@@ -92,14 +96,18 @@ export class HttpClient {
         var request: http.ClientRequest;
         var self = this;
 
+        
+
         // Generate options for creating a request against the specified url-endpoint
         var options: http.RequestOptions = {
             hostname: this.url,
+            host:this.url,
             port: this.options.port,
             path: path,
             method: type,
             headers: this.headers,
-            protocol: this.options.protocol
+            protocol: this.options.protocol,
+            agent: this.keepAliveAgent
         };
 
         // Device whether http or https should be used

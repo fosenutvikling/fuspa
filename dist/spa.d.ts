@@ -1,4 +1,4 @@
-export declare module Spa {
+declare module Spa {
 	export class RouteMapper {
 		static runOnNextChange: Function;
 		static init(): void;
@@ -49,6 +49,7 @@ export declare module Spa {
 		private headers;
 		private options;
 		private error;
+		private keepAliveAgent;
 		constructor(url: string, options?: iOptions);
 		setError(error: Function): void;
 		addHeader(key: string, value: string): void;
@@ -116,3 +117,5 @@ export declare module Spa {
 		render(template: string): void;
 	}
 }
+
+export = Spa;
