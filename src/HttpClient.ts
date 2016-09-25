@@ -1,14 +1,12 @@
 import * as http from 'http';
 import * as https from 'https';
 
-export type DataType = 'json' | 'xml' | 'script' | 'html';
 export type Protocol = 'http' | 'https';
 
 export interface iOptions {
     protocol: Protocol, // Whether to use https or regular http
     encoding: string, // Character encoding for received result
     port?: number, // Port of remote server
-    type?: DataType, // Date type to be received from server (xml, json, script, html). Used to parse received data to its corresponding type
     error: Function // function to run on error with request
 }
 
@@ -96,8 +94,6 @@ export class HttpClient {
         var request: http.ClientRequest;
         var self = this;
 
-
-
         // Generate options for creating a request against the specified url-endpoint
         var options: http.RequestOptions = {
             hostname: this.url,
@@ -133,8 +129,13 @@ export class HttpClient {
     }
 
     private responseHandler(response: http.IncomingMessage, next: Function) {
-        var data: any;
-        var self = this;
+        let data: string = '';
+        let self = this;
+        let type: string;
+
+        if (response.headers !== undefined && response.headers['content-type'] !== undefined) {
+            type = response.headers['content-type'];
+        }
 
         // Combine all retrieved data
         response.on('data', function (chunkData) {
@@ -143,9 +144,11 @@ export class HttpClient {
 
         // Request have ended, and data needs to be parsed based on specified type
         response.on('end', function () {
+            if (response.statusCode >= 400 && response.statusCode < 600)
+                return self.error(data);
 
-            switch (self.options.type) {
-                case "json":
+            switch (type) {
+                case 'application/json':
                     try {
                         data = JSON.parse(data);
                     } catch (e) {
@@ -153,15 +156,20 @@ export class HttpClient {
                     }
                     break;
 
-                case "xml":
+                case 'application/xml':
+                case 'text/xml':
+                    break;
+
+                case 'text/html':
+                    break;
+
                 case "script":
-                case "html":
                     break;
 
                 default:
                     self.error({
                         code: 101,
-                        message: 'Unsupported DataType for http request specified: ' + self.options.type
+                        message: 'Unsupported content-type for http response received: ' + type
                     });
                     break;
             }
