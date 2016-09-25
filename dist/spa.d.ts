@@ -1,6 +1,7 @@
 declare module Spa {
 	export class RouteMapper {
 		static runOnNextChange: Function;
+		static runOnChange: Function;
 		static init(): void;
 	    /**
 	     * Changes the current hash without notifying Crossroads, to prevent any parsing and redirecting of hash
@@ -35,13 +36,11 @@ declare module Spa {
 		static renderErrorPage(): void;
 	}
 
-	export type DataType = 'json' | 'xml' | 'script' | 'html';
 	export type Protocol = 'http' | 'https';
 	export interface iOptions {
 		protocol: Protocol;
 		encoding: string;
 		port?: number;
-		type?: DataType;
 		error: Function;
 	}
 	export class HttpClient {
