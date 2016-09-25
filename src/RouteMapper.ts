@@ -4,6 +4,7 @@ import * as hasher from 'hasher';
 export class RouteMapper {
 
     public static runOnNextChange: Function = null;
+    public static runOnChange: Function = null;
 
     static init(): void {
 
@@ -46,6 +47,11 @@ export class RouteMapper {
             RouteMapper.runOnNextChange();
             RouteMapper.runOnNextChange = null;
         }
+
+        if (RouteMapper.runOnChange !== null) {
+            RouteMapper.runOnChange();
+        }
+
         crossroads.parse(newHash);
     }
 
