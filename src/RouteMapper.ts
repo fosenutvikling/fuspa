@@ -1,58 +1,88 @@
-import * as crossroads from 'crossroads';
 import * as hasher from 'hasher';
+import * as UrlPattern from 'url-pattern';
 
 export class RouteMapper {
 
-    public static runOnNextChange: Function = null;
-    public static runOnChange: Function = null;
+    private static _instance: RouteMapper;
 
-    static init(): void {
+    private _runOnNextChange: Function;
+    private _runOnChange: Function;
 
-        hasher.changed.add(RouteMapper.hashChange);//add hash change listener
-        hasher.initialized.add(RouteMapper.hashChange); //add initialized listener (to grab initial value in case it is already set)
+    private routes: { pattern: UrlPattern, fn: Function }[];
 
+    public static get instance(): RouteMapper {
+        if (this._instance == null)
+            this._instance = new RouteMapper();
+        return this._instance;
+    }
+
+    private constructor() {
+        this._runOnChange = null;
+        this._runOnNextChange = null;
+        this.routes = [];
+    }
+
+    private initialize() {
+        //add hash change listener
+        hasher.changed.add(this.onHashChange);
+
+        //add initialized listener (to grab initial value in case it is already set)
+        hasher.initialized.add(this.onHashChange);
         hasher.init(); //initialize hasher (start listening for history changes)
     }
 
+    private onHashChange(newHash: string, oldHash: string) {
+        if (this._runOnNextChange !== null) {
+            this._runOnNextChange();
+            this._runOnNextChange = null;
+        }
+
+        if (this._runOnChange !== null)
+            this._runOnChange();
+
+        this.parse(newHash);
+    }
+
+    private parse(check: string) {
+        for (let i = 0; i < this.routes.length; ++i) {
+            let matched = this.routes[i].pattern.match(check);
+            if (matched == null) {
+                this.routes[i].fn.apply(this, )
+                return matched;
+            }
+        }
+        return false;
+    }
+
+    public set runOnNextChange(fn: Function) {
+        this._runOnNextChange = fn;
+    }
+
+    public set runOnChange(fn: Function) {
+        this._runOnChange = fn;
+    }
+
     /**
-     * Changes the current hash without notifying Crossroads, to prevent any parsing and redirecting of hash
+     * Add a route which should be matched on a hashChange event
+     * @param pattern 
+     * @param fn 
+     */
+    public addRoute(pattern: string, fn: Function) {
+        this.routes.push({
+            pattern: new UrlPattern(pattern),
+            fn: fn
+        });
+    }
+
+    /**
+     * Changes the current hash and prevent any parsing and redirecting of hash
      * @param  {string} hash to silently change
      */
-    static setHashSilently(hash: string): void {
-        hasher.changed.active = false; //disable changed signal.set hash without dispatching changed signal
-        RouteMapper.setHash(hash);
-        hasher.changed.active = true; //re-enable signal
-    }
-
-    static setHash(hash: string) {
+    public setHashSilently(hash: string): void {
+        // Disable changed signal.set hash without dispatching changed signal
+        hasher.changed.active = false;
         hasher.setHash(hash);
+        // Re-enable signal
+        hasher.changed.active = true;
     }
-
-    static isHash(hash: string): boolean {
-        return hash === hasher.getHash();
-    }
-
-
-    /**
-     * Add a route to which should be searched on a hashChange event
-     * @param  {string} path to listen for
-     * @param  {Function} func to run if route matches
-     */
-    static addRoute(path: string, func: Function): void {
-        crossroads.addRoute(path, func);
-    }
-
-    static hashChange(newHash: string, oldHash: string): void {
-        if (RouteMapper.runOnNextChange !== null) {
-            RouteMapper.runOnNextChange();
-            RouteMapper.runOnNextChange = null;
-        }
-
-        if (RouteMapper.runOnChange !== null) {
-            RouteMapper.runOnChange();
-        }
-
-        crossroads.parse(newHash);
-    }
-
 }
