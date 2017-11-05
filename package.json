@@ -6,7 +6,7 @@
   "typings": "dist/spa.d.ts",
   "scripts": {
     "build": "rm -rf dist && grunt build",
-    "prepublish": "typings install && npm run build",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -24,16 +24,16 @@
   },
   "homepage": "https://github.com/jonaskirkemyr/spa#readme",
   "dependencies": {
-    "crossroads": "^0.12.2",
-    "hasher": "^1.2.0"
+    "commander": "^2.11.0",
+    "handlebars": "^4.0.11",
+    "hasher": "^1.2.0",
+    "minimist": "^1.2.0",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
-    "dts-generator": "^1.7.0",
-    "grunt": "^0.4.5",
-    "grunt-webpack": "^1.0.14",
-    "ts-loader": "^0.8.2",
-    "typescript": "^1.8.10",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.14.1"
+    "@types/node": "^8.0.47",
+    "ts-loader": "^3.1.0",
+    "typescript": "^2.5.3",
+    "webpack": "^3.8.1"
   }
 }
