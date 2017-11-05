@@ -1,43 +1,56 @@
-import {iRoute} from './iRoute';
-import {RouteMapper} from './RouteMapper';
-import {App} from './App';
+export class Route {
+    private static _instance;
+    public static options: {
+        container: string, // Id of html-element which should be replaced by rendered template
+        templateEngine: any // Engine to use for rendering
+    };
 
-export abstract class Route implements iRoute {
-    private route: string;//the url path of the current route
-    private title: string;//title of current route
-    container: string;//container which should replace the dynamic html-page
+    private _title: string; //title of current route
+    private _container: HTMLElement;
+    private _engine;
 
-    constructor(route: string) {
-        this.route = route;
-        this.title = null;
+    public static get instance() {
+        if (this._instance == null) {
+            this._instance = new Route();
+        }
+        return this._instance;
     }
 
-    setRouteTitle(title: string) {
-        this.title = title;
+    private constructor() {
+        if (Route.options.container == null)
+            throw new Error('Container not set');
+        if (Route.options.templateEngine == null)
+            throw new Error('TemplateEngine not set');
+
+        this._container = document.getElementById(Route.options.container);
+        if (this._container === null)
+            throw 'Couldn\'t find element. Is DOM ready?';
+
+        this._engine = Route.options.templateEngine;
     }
 
-    getRouteTitle(): string {
-        return this.title;
+    public get container() {
+        return this._container;
     }
 
-    getRoute(): string {
-        return this.route;
+    public get engine() {
+        return this._engine;
+    }
+
+    public set title(title: string) {
+        this._title = title;
+        window.document.title = title;
+    }
+
+    public get title(): string {
+        return this._title;
     }
 
     /**
-     * Initializes routes
+     * Renders a hbs template file
      */
-    abstract initRoutes();
-
-    addRoute(path: string, func: Function) {
-        RouteMapper.addRoute(this.route + path, func);
-    }
-
-    /**
-     * Renders a hbs template file, defined in views folder:
-     * views/templates/pages/*
-     */
-    render(template: string) {
-        App.generateHtml(null, 'pages/' + template);
+    public render(template: string, data: Object = {}) {
+        const html = this.engine[template](data); // App.namespace[template](data);
+        this._container.innerHTML = html;
     }
 }

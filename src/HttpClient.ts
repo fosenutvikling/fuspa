@@ -12,7 +12,7 @@ export interface iOptions {
 
 export class HttpClient {
     private url: string; //Domain name or IP address to send http request to
-    private headers: Object; //headers to append to query
+    private headers: http.OutgoingHttpHeaders; //headers to append to query
     private options: iOptions; //data type to be sent with query
 
     private error: Function;//function to run on error with request
@@ -42,7 +42,7 @@ export class HttpClient {
         this.headers[key] = value;
     }
 
-    setHeader(headers: Object) {
+    setHeader(headers: http.OutgoingHttpHeaders) {
         this.headers = headers;
     }
 
@@ -131,7 +131,7 @@ export class HttpClient {
     private responseHandler(response: http.IncomingMessage, next: Function) {
         let data: string = '';
         let self = this;
-        let type: string;
+        let type: string | string[];
 
         if (response.headers !== undefined && response.headers['content-type'] !== undefined) {
             type = response.headers['content-type'];
