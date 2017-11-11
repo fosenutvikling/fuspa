@@ -1,9 +1,13 @@
-const addRoutes = `import * as spa from 'spa';
+export const addRoutes = (loadTemplates, assignEngine) => {
+    return `import * as spa from 'spa';
 const routeMapper = spa.RouteMapper.instance;
-// TODO: add handlebars
+
+// Load engine specific templates
+${loadTemplates}
+
 spa.Route.options = {
     container_ 'app',
-    templateEngine:
+    templateEngine: ${assignEngine}
 };
 const route = spa.Route;
 
@@ -13,7 +17,4 @@ routeMapper.addRoute('/', () => {
 
 routeMapper.addRoute('/hello', () => {
 
-});`
-
-
-module.exports = addRoutes;
+});`}
