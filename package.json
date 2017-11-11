@@ -6,7 +6,6 @@
   "typings": "dist/spa.d.ts",
   "scripts": {
     "build": "rm -rf dist && grunt build",
-    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -32,6 +31,8 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.47",
+    "global-npm": "^0.3.0",
+    "npm-add-script": "^1.1.0",
     "ts-loader": "^3.1.0",
     "typescript": "^2.5.3",
     "webpack": "^3.8.1"
