@@ -15,6 +15,20 @@
 console.log("NAMERT", program.namert);
 */
 //if (program.namert)
+var npm = require('global-npm');
+
+
+
+console.log(handlebars);
+//handlebars.scripts();
+
+npm.load({}, function (er) {
+    if (er) { return; }
+    npm.commands.init();
+    npm.commands.install(handlebars.dependencies);
+    handlebars.scripts();
+});
+
 
 const fs = require('fs');
 const file = require('./fileStrings');
