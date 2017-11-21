@@ -1,8 +1,8 @@
 export class Route {
     private static _instance;
     public static options: {
-        container: string, // Id of html-element which should be replaced by rendered template
-        templateEngine: any // Engine to use for rendering
+        container: string; // Id of html-element which should be replaced by rendered template
+        templateEngine: any; // Engine to use for rendering
     };
 
     private _title: string; //title of current route
@@ -17,16 +17,16 @@ export class Route {
     }
 
     private constructor() {
-        if (Route.options.container == null)
-            throw new Error('Container not set');
-        if (Route.options.templateEngine == null)
-            throw new Error('TemplateEngine not set');
-
-        this._container = document.getElementById(Route.options.container);
-        if (this._container === null)
-            throw 'Couldn\'t find element. Is DOM ready?';
+        if (Route.options.container == null) throw new Error('Container not set');
+        if (Route.options.templateEngine == null) throw new Error('TemplateEngine not set');
 
         this._engine = Route.options.templateEngine;
+    }
+
+    public start() {
+        this._container = document.getElementById(Route.options.container);
+        if (this._container === null) throw "Couldn't find element. Is DOM ready?";
+        return true;
     }
 
     public get container() {
