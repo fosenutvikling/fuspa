@@ -18,8 +18,6 @@ export class ProjectFiles {
         
         routeMapper.addRoute('/hello', () => {
         
-        });`
+        });`;
     }
-
-    
 }

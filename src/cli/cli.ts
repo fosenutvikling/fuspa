@@ -1,44 +1,56 @@
+import { ProjectFiles, envSlash } from './ProjectFiles/ProjectFiles';
 import * as npm from 'global-npm';
 import * as npmAddScript from 'npm-add-script';
-import { Handlebars } from './Engines/Handlebars';
+import { Handlebars } from './Engines/Handlebars/Handlebars';
+
 import * as fs from 'fs';
 
-const engine = new Handlebars();
+const engine = new Handlebars('./views', './src'); // TOOD: add constructor parameter
 
 // Initialize package.json
 npm.load({}, function (error) {
     if (error) {
         console.error(error);
         return;
-    }
-    else {
-        npm.commands.init();
-        npm.commands.install(engine.dependencies);
+    } else {
+        //console.log("NPM", npm);
+        //npm.commands.init();
+        //npm.commands['install-test'](projectFiles.dependencies); // TODO: continue here
+        //npm.commands.install(engine.dependencies);
 
-        Object.keys(engine.scripts).forEach(key => {
-            npmAddScript({ key: key, value: engine.scripts[key] });
+        const scripts = engine.scripts();
+        Object.keys(scripts).forEach(key => {
+            try {
+                npmAddScript({ key: key, value: scripts[key] });
+            }
+            catch (e) {
+                console.error("Ex", e);
+            }
         });
     }
 });
 
 // Create project folder
 let name = 'test';
-let configFile = __dirname + '/spa.options.js';
+let configFile = process.cwd() + envSlash() + 'spa.options.js';
 
 const config = require(configFile);
 
-const projectFolder = __dirname + '/' + name + '/';
-if (!fs.existsSync(projectFolder))
-    fs.mkdirSync(projectFolder);
+const projectFiles = new ProjectFiles(engine, process.cwd() + envSlash() + name, 'main.ts');
+projectFiles.write();
 
-const sourceFolder = projectFolder + 'src/';
-fs.mkdirSync(sourceFolder);
+//var program = require('commander');
 
-Object.keys(engine.createPages).forEach(key => {
-    fs.writeFile(sourceFolder + key, engine.createPages[key], error => {
-        if (error) console.error(error);
-        else console.log("Created file `" + key + "`");
-    });
-});
+//program
+//    .version('0.1.0')
+//    .option('-N, --obs <obse>', 'Name of project')
+//    .option('-f, --file <path>', 'set config path. defaults to ./spa.options.js', './spa.options.js')
+//    .command('<namert>')
+//    .parse(process.argv);
 
-Object.keys(engi)
+//program.parse(process.argv);
+/*if (program.obs)
+    console.log("program.name", program.obs);
+console.log("NAMERT", program.namert);
+*/
+//if (program.namert)

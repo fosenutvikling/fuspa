@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "../../dist/cli",
+        "typeRoots": [
+            "../../node_modules/@types"
+        ],
+        "removeComments": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "declaration": true,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "listFiles": true
+    },
+    "files": [
+        "cli.ts"
+    ]
+}

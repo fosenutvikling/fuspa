@@ -1,4 +1,4 @@
-export const tsconfig = (mainFile) => {
+export const tsconfig = mainFile => {
     return `
     {
         "compilerOptions": {
@@ -9,5 +9,5 @@ export const tsconfig = (mainFile) => {
             "./${mainFile}"
         ]
     }
-    `
-}
+    `;
+};
