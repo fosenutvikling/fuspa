@@ -5,7 +5,7 @@
   "main": "dist/spa.min.js",
   "typings": "dist/spa.d.ts",
   "scripts": {
-    "build": "rm -rf dist && grunt build",
+    "build:cli": "./node_modules/.bin/tsc -p ./src/cli/tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
