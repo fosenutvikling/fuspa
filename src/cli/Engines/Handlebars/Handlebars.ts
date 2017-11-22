@@ -1,5 +1,4 @@
 import { iEngine } from '../iEngine';
-
 import { Helpers } from './Helpers';
 
 export class Handlebars implements iEngine {
@@ -27,28 +26,36 @@ export class Handlebars implements iEngine {
     public readonly scripts = () => {
         return {
             'spa:engine':
-                this.handlebarsBin + ' ' +
-                this.sourceFolder +
-                this.templateFolder +
-                ' --extension hbs --output ' +
-                this.outputFolder +
-                this.templateOutput +
-                ' --commonjs handlebars/runtime --min',
+            this.handlebarsBin + ' ' +
+            this.sourceFolder +
+            this.templateFolder +
+            ' --extension hbs --output ' +
+            this.outputFolder +
+            this.templateOutput +
+            ' --commonjs handlebars/runtime --min',
 
             'spa:engine:partials':
-                this.handlebarsBin + ' ' +
-                this.sourceFolder +
-                this.partialFolder +
-                ' --extension hbs --output ' +
-                this.outputFolder +
-                this.partialOutput +
-                ' --commonjs handlebars/runtime --map'
+            this.handlebarsBin + ' ' +
+            this.sourceFolder +
+            this.partialFolder +
+            ' --extension hbs --output ' +
+            this.outputFolder +
+            this.partialOutput +
+            ' --commonjs handlebars/runtime --map'
         };
     };
 
-    public readonly createPages = {
-        'hbsHelpers.js': Helpers
-    };
+    public createPages = () => [
+        {
+            filename: this.outputFolder + '/hbsHelpers.js',
+            textContent: Helpers
+        },
+        {
+            filename: this.sourceFolder + this.templateFolder,
+            textContent: 'test'
+        }
+    ];
+
 
     public constructor(sourceFolder, outputFolder) {
         this.sourceFolder = sourceFolder;

@@ -1,3 +1,4 @@
+import { IFileContent }  from '../Functions';
 export interface iEngine {
     // Folder for which source files for engine should reside
     sourceFolder: string;
@@ -20,8 +21,7 @@ export interface iEngine {
      */
     readonly scripts?: () => { [name: string]: string };
 
-    /* Optional pages to create which can be used by engine, where
-     * filename is the file to create, and the value is the content of the file
-     */
-    readonly createPages?: { [filename: string]: string };
+    // Optional files to create which can be used by engine
+    createPages?: () => IFileContent[];
 }
+
