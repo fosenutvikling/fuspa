@@ -5,7 +5,7 @@ import { Handlebars } from './Engines/Handlebars/Handlebars';
 
 import * as fs from 'fs';
 
-const engine = new Handlebars('./views', './src'); // TOOD: add constructor parameter
+const engine = new Handlebars('./src/views', './src'); // TOOD: add constructor parameter
 
 // Initialize package.json
 npm.load({}, function (error) {
