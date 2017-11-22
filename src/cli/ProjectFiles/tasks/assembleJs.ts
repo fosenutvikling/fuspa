@@ -45,4 +45,6 @@ export const assembleJs = (options: AssembleOptions[], destination) => {
         output += createTask(options[i], destination);
 
     output += ' module.exports = app;'
+
+    return output;
 }

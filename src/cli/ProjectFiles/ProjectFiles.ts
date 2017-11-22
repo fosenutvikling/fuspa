@@ -1,7 +1,7 @@
 import { Main } from './Main';
 import { tsconfig } from './tsconfig';
-import { iEngine } from '../Engines/iEngine';
-import * as fs from 'fs';
+import { iEngine, IFileContent } from '../Engines/iEngine';
+import { envSlash, createFolder } from '../Functions';
 
 // tasks
 import { liveServerJs } from './tasks/liveServerJs';
@@ -15,15 +15,6 @@ import { mainScss } from './styles/mainScss';
 
 import { headerHbs, layoutHbs, pageHbs } from './assemble';
 
-export interface IFileContent {
-    filename: string;
-    textContent: string;
-}
-
-export const envSlash = () => {
-    return process.platform == 'win32' ? '\\' : '/';
-}
-
 export class ProjectFiles {
     private projectFolder;
     private engine: iEngine;
@@ -32,10 +23,12 @@ export class ProjectFiles {
     private outFolder = './dist';
     private assetsFolder = '/assets';
 
+    private assembleDir;
     public constructor(engine: iEngine, projectFolder: string, mainFile: string) {
         this.projectFolder = projectFolder;
         this.mainFile = mainFile;
         this.engine = engine;
+        this.assembleDir = this.projectFolder + envSlash() + 'src' + envSlash() + 'views' + envSlash() + 'assemble';
     }
 
     public get dependencies() {
@@ -45,25 +38,19 @@ export class ProjectFiles {
     }
 
     private createProjectFolders() {
-        return this.createFolder(this.projectFolder) &&
-            this.createFolder(this.projectFolder + envSlash() + 'src') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src/app') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'styles') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views/assemble') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views/assemble/pages') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views/assemble/layouts') &&
-            this.createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views/assemble/partials') &&
-            this.createFolder(this.projectFolder + envSlash() + 'tasks') &&
-            this.createFolder(this.projectFolder + envSlash() + 'static') &&
-            this.createFolder(this.projectFolder + envSlash() + 'static' + envSlash() + 'fonts') &&
-            this.createFolder(this.projectFolder + envSlash() + 'static' + envSlash() + 'images');
-    }
-
-    private createFolder(path) {
-        if (!fs.existsSync(path)) fs.mkdirSync(path);
-        else return true;
-        return fs.existsSync(path);
+        return createFolder(this.projectFolder) &&
+            createFolder(this.projectFolder + envSlash() + 'src') &&
+            createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'app') &&
+            createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'styles') &&
+            createFolder(this.projectFolder + envSlash() + 'src' + envSlash() + 'views') &&
+            createFolder(this.assembleDir) &&
+            createFolder(this.assembleDir + envSlash() + 'pages') &&
+            createFolder(this.assembleDir + envSlash() + 'layouts') &&
+            createFolder(this.assembleDir + envSlash() + 'partials') &&
+            createFolder(this.projectFolder + envSlash() + 'tasks') &&
+            createFolder(this.projectFolder + envSlash() + 'static') &&
+            createFolder(this.projectFolder + envSlash() + 'static' + envSlash() + 'fonts') &&
+            createFolder(this.projectFolder + envSlash() + 'static' + envSlash() + 'images');
     }
 
     private createTaskFiles() {
@@ -87,7 +74,12 @@ export class ProjectFiles {
             },
             {
                 filename: 'assemble.js',
-                textContent: assembleJs()
+                textContent: assembleJs([{
+                    task: 'default',
+                    pages: './src/views/assemble/pages/*.hbs',
+                    layout: './src/views/assemble/layouts/baseLayout.hbs',
+                    partials: './src/views/assemble/partials/*.hbs'
+                }], this.outFolder)
             }
         ];
 
@@ -128,45 +120,51 @@ export class ProjectFiles {
     }
 
     private createAssembleFiles() {
-        const assembleDir = this.projectFolder + envSlash() + 'src' + envSlash() + 'views' + envSlash() + 'assemble';
         let files: IFileContent[] = [
             {
-                filename: assembleDir + 'partials/header.hbs',
-                textContent: headerHbs
+                filename: 'partials/header.hbs',
+                textContent: headerHbs()
             },
             {
-                filename: assembleDir + 'pages/simplePage.hbs',
-                textContent: pageHbs
+                filename: 'pages/simplePage.hbs',
+                textContent: pageHbs()
             },
             {
-                filename: assembleDir + 'layouts/baseLayout.hbs',
-                textContent: layoutHbs
+                filename: 'layouts/baseLayout.hbs',
+                textContent: layoutHbs()
             }
         ];
+
+        return this.writeFiles(this.assembleDir, files)
+    }
+
+    private createEngineFiles() {
+        let files = this.engine.createPages();
     }
 
     private writeFiles(folder: string, files: IFileContent[]) {
         for (let i = 0; i < files.length; ++i) {
             const file = folder + envSlash() + files[i].filename;
-            console.log("file to write: ", files[i].textContent);
-            /*  fs.writeFile(file, files[i].textContent, error => {
-                  if (error) {
-                      console.error(error);
-                      throw Error('Not able to create file: `' + file + '`');
-                  }
-                  else console.log('Created file: `' + file + '`');
-              });*/
+            console.log("file to write: ", files[i].filename);
+            /*fs.writeFile(file, files[i].textContent, error => {
+                if (error) {
+                    console.error(error);
+                    throw Error('Not able to create file: `' + file + '`');
+                }
+                else console.log('Created file: `' + file + '`');
+            });*/
         }
 
         return true;
     }
 
     public write() {
-        return this.createProjectFolders &&
+        return this.createProjectFolders() &&
             this.createTaskFiles() &&
             this.createStyleFiles() &&
             this.createSrcFiles() &&
-            this.createProjectFiles();
+            this.createProjectFiles() &&
+            this.createAssembleFiles();
     }
 
     public scripts() {
