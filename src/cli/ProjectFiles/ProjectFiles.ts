@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { Main } from './Main';
 import { tsconfig } from './tsconfig';
 import { iEngine } from '../Engines/iEngine';
@@ -9,6 +10,7 @@ import { webpackJs } from './tasks/wepackJs';
 import { baseJs } from './tasks/baseJs';
 import { sassJs } from './tasks/sassJs';
 import { assembleJs } from './tasks/assembleJs';
+import { copyJs } from './tasks/copyJs';
 
 // styles
 import { mainScss } from './styles/mainScss';
@@ -58,11 +60,11 @@ export class ProjectFiles {
         let files: IFileContent[] = [
             {
                 filename: 'webpack.js',
-                textContent: webpackJs('./src/main.ts', this.outFolder + this.assetsFolder + '/js/bundle.min.js')
+                textContent: webpackJs('./src/app/main.ts', this.outFolder + this.assetsFolder + '/js/bundle.min.js')
             },
             {
                 filename: 'liveServer.js',
-                textContent: liveServerJs('./dist')
+                textContent: liveServerJs(this.outFolder)
             },
             {
                 filename: 'base.js',
@@ -70,7 +72,7 @@ export class ProjectFiles {
             },
             {
                 filename: 'sass.js',
-                textContent: sassJs('./styles/main.scss', this.outFolder + this.assetsFolder + '/css/bundle.min.css')
+                textContent: sassJs('./src/styles/main.scss', this.outFolder + this.assetsFolder + '/css/bundle.min.css')
             },
             {
                 filename: 'assemble.js',
@@ -80,6 +82,12 @@ export class ProjectFiles {
                     layout: './src/views/assemble/layouts/baseLayout.hbs',
                     partials: './src/views/assemble/partials/*.hbs'
                 }], this.outFolder)
+            },
+            {
+                filename: 'copy.js',
+                textContent: copyJs(
+                    { source: './static/images', output: this.outFolder + '/assets/images' },
+                    { source: './static/fonts', output: this.outFolder + '/assets/fonts' })
             }
         ];
 
@@ -94,7 +102,7 @@ export class ProjectFiles {
             }
         ];
 
-        return this.writeFiles(this.projectFolder + envSlash() + 'styles', files);
+        return this.writeFiles(this.projectFolder + envSlash() + 'src' + envSlash() + 'styles', files);
     }
 
     private createSrcFiles() {
@@ -105,14 +113,14 @@ export class ProjectFiles {
             }
         ];
 
-        return this.writeFiles(this.projectFolder + envSlash() + 'src', files);
+        return this.writeFiles(this.projectFolder + envSlash() + 'src' + envSlash() + 'app', files);
     }
 
     private createProjectFiles() {
         let files: IFileContent[] = [
             {
                 filename: 'tsconfig.json',
-                textContent: tsconfig(this.mainFile)
+                textContent: tsconfig('src/app/' + this.mainFile)
             }
         ];
 
@@ -134,12 +142,15 @@ export class ProjectFiles {
                 textContent: layoutHbs()
             }
         ];
-
         return this.writeFiles(this.assembleDir, files)
     }
 
     private createEngineFiles() {
+        let folders = this.engine.createFolders();
         let files = this.engine.createPages();
+
+        for (let i = 0; i < folders.length; ++i)
+            createFolder(this.projectFolder + envSlash() + folders[i]);
 
         return this.writeFiles(this.projectFolder, files);
     }
@@ -148,16 +159,28 @@ export class ProjectFiles {
         for (let i = 0; i < files.length; ++i) {
             const file = folder + envSlash() + files[i].filename;
             console.log("file to write: ", files[i].filename);
-            /*fs.writeFile(file, files[i].textContent, error => {
+            fs.writeFile(file, files[i].textContent, error => {
                 if (error) {
                     console.error(error);
                     throw Error('Not able to create file: `' + file + '`');
                 }
                 else console.log('Created file: `' + file + '`');
-            });*/
+            });
         }
 
         return true;
+    }
+
+    public npmScripts() {
+        return {
+            'build:html': './node_modules/.bin/assemble --cwd=tasks',
+            'build:webpack': './node_modules/.bin/webpack --config tasks/webpack.js',
+            'debug': './node_modules/.bin/webpack --config tasks/webpack.js --watch',
+            'build:style': 'node tasks/node-sass.js',
+            'copy': 'node tasks/copy.js',
+            'start': 'node tasks/liveServer.js',
+            'init': 'npm run copy && npm run build:html && npm run build:style && npm run build:webpack && npm run spa:engine'
+        };
     }
 
     public write() {
