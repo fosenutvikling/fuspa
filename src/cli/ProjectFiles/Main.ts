@@ -17,12 +17,12 @@ routeMapper.addRoute('/', () => {
     route.render('home');
 });
 
-routeMapper.addRoute('/hello/:name', () => {
+routeMapper.addRoute('/hello/:name', name => {
     route.title = 'Welcome, ' + name + '!';
-    route.render('greeting', {id: id});
+    route.render('greeting', {name: name});
 });
 
-windows.onload = function() {
+window.onload = function() {
     route.start();
     routeMapper.listen();
 }
