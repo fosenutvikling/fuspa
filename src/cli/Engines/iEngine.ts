@@ -1,4 +1,4 @@
-import { IFileContent }  from '../Functions';
+import { IFileContent } from '../Functions';
 export interface iEngine {
     // Folder for which source files for engine should reside
     sourceFolder: string;
@@ -23,5 +23,8 @@ export interface iEngine {
 
     // Optional files to create which can be used by engine
     createPages?: () => IFileContent[];
+
+    // Folders to create before creating files
+    createFolders?: () => string[];
 }
 

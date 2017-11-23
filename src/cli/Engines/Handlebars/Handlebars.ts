@@ -5,32 +5,34 @@ import { homeIndexPage, headerPartial } from './PagesHbs';
 
 export class Handlebars implements iEngine {
     private handlebarsBin = '../node_modules/.bin/handlebars ';
-    private templateFolder = '/templates';
-    private partialFolder = '/partials';
+    private templateFolder = 'templates';
+    private partialFolder = 'partials';
 
     public sourceFolder;
     public outputFolder;
 
+    // Do not contain and foreward or backward slashes, as npm scripts may 
+    // contain foreward slashes, eventhough if the os do not support it
     private templateOutput = 'templates.js';
     private partialOutput = 'partials.js';
 
-    public readonly dependencies = ['handlebars'];
+    public readonly dependencies = ['handlebars', 'moment'];
 
     public readonly loadTemplates = `
-    const handlebars = require('handlebars/runtime');
+    const Handlebars = require('handlebars/runtime');
     require('./templates.js');
     require('./partials.js');
     require('./HbsHelpers')(Handlebars);
     `;
 
-    public readonly assignEngine = 'handlebars.templates';
+    public readonly assignEngine = 'Handlebars.templates';
 
     public readonly scripts = () => {
         return {
-            'spa:engine':
+            'spa:engine:templates':
                 this.handlebarsBin + ' ' +
-                this.sourceFolder +
-                this.templateFolder +
+                './' + this.sourceFolder +
+                '/' + this.templateFolder +
                 ' --extension hbs --output ' +
                 this.outputFolder +
                 this.templateOutput +
@@ -38,28 +40,36 @@ export class Handlebars implements iEngine {
 
             'spa:engine:partials':
                 this.handlebarsBin + ' ' +
-                this.sourceFolder +
-                this.partialFolder +
+                './' + this.sourceFolder +
+                '/' + this.partialFolder +
                 ' --extension hbs --output ' +
                 this.outputFolder +
                 this.partialOutput +
-                ' --commonjs handlebars/runtime --map'
+                ' --commonjs handlebars/runtime --map',
+
+            'spa:engine': 'nmp run spa:engine:templates && npm run spa:engine:partials'
         };
     };
 
     public createPages = () => [
         {
-            filename: this.outputFolder + '/hbsHelpers.js',
+            filename: this.outputFolder + '/hbsHelpers.ts',
             textContent: Helpers
         },
         {
-            filename: this.sourceFolder + this.templateFolder + envSlash() + 'home' + envSlash() + 'index.hbs',
+            filename: this.sourceFolder + envSlash() + this.templateFolder + envSlash() + 'home' + envSlash() + 'index.hbs',
             textContent: homeIndexPage
         },
         {
-            filename: this.sourceFolder + this.partialFolder + envSlash() + 'footer.hbs',
+            filename: this.sourceFolder + envSlash() + this.partialFolder + envSlash() + 'footer.hbs',
             textContent: headerPartial
         }
+    ];
+
+    public createFolders = () => [
+        this.sourceFolder + envSlash() + this.templateFolder,
+        this.sourceFolder + envSlash() + this.templateFolder + envSlash() + 'home',
+        this.sourceFolder + envSlash() + this.partialFolder
     ];
 
 
