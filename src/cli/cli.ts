@@ -6,7 +6,7 @@ import { envSlash } from './Functions';
 
 import * as fs from 'fs';
 
-const engine = new Handlebars('./src/views', './src'); // TOOD: add constructor parameter
+const engine = new Handlebars('src/views', 'src/app'); // TOOD: add constructor parameter
 
 // Initialize package.json
 npm.load({}, function (error) {
