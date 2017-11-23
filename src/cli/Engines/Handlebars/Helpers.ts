@@ -3,6 +3,9 @@ export const Helpers = `
 * Helpers for Handlebars templates
 * Refer to a helper, using its name i.e. {{helpername data-1 data-2 ... data-n}}
 */
+
+import * as moment from 'moment';
+
 export = function (Handlebars) {
 let globalVariables = {};
 

@@ -1,7 +1,7 @@
 import { Main } from './Main';
 import { tsconfig } from './tsconfig';
-import { iEngine, IFileContent } from '../Engines/iEngine';
-import { envSlash, createFolder } from '../Functions';
+import { iEngine } from '../Engines/iEngine';
+import { envSlash, createFolder, IFileContent } from '../Functions';
 
 // tasks
 import { liveServerJs } from './tasks/liveServerJs';
@@ -140,6 +140,8 @@ export class ProjectFiles {
 
     private createEngineFiles() {
         let files = this.engine.createPages();
+
+        return this.writeFiles(this.projectFolder, files);
     }
 
     private writeFiles(folder: string, files: IFileContent[]) {
@@ -164,7 +166,8 @@ export class ProjectFiles {
             this.createStyleFiles() &&
             this.createSrcFiles() &&
             this.createProjectFiles() &&
-            this.createAssembleFiles();
+            this.createAssembleFiles() &&
+            this.createEngineFiles(); // ./src/views. should probably do something else..
     }
 
     public scripts() {

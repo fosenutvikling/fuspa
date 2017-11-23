@@ -1,7 +1,8 @@
-import { ProjectFiles, envSlash } from './ProjectFiles/ProjectFiles';
+import { ProjectFiles } from './ProjectFiles/ProjectFiles';
 import * as npm from 'global-npm';
 import * as npmAddScript from 'npm-add-script';
 import { Handlebars } from './Engines/Handlebars/Handlebars';
+import { envSlash } from './Functions';
 
 import * as fs from 'fs';
 

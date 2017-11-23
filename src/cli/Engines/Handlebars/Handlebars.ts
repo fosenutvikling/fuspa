@@ -1,5 +1,7 @@
 import { iEngine } from '../iEngine';
 import { Helpers } from './Helpers';
+import { envSlash } from '../../Functions';
+import { homeIndexPage, headerPartial } from './PagesHbs';
 
 export class Handlebars implements iEngine {
     private handlebarsBin = '../node_modules/.bin/handlebars ';
@@ -26,22 +28,22 @@ export class Handlebars implements iEngine {
     public readonly scripts = () => {
         return {
             'spa:engine':
-            this.handlebarsBin + ' ' +
-            this.sourceFolder +
-            this.templateFolder +
-            ' --extension hbs --output ' +
-            this.outputFolder +
-            this.templateOutput +
-            ' --commonjs handlebars/runtime --min',
+                this.handlebarsBin + ' ' +
+                this.sourceFolder +
+                this.templateFolder +
+                ' --extension hbs --output ' +
+                this.outputFolder +
+                this.templateOutput +
+                ' --commonjs handlebars/runtime --min',
 
             'spa:engine:partials':
-            this.handlebarsBin + ' ' +
-            this.sourceFolder +
-            this.partialFolder +
-            ' --extension hbs --output ' +
-            this.outputFolder +
-            this.partialOutput +
-            ' --commonjs handlebars/runtime --map'
+                this.handlebarsBin + ' ' +
+                this.sourceFolder +
+                this.partialFolder +
+                ' --extension hbs --output ' +
+                this.outputFolder +
+                this.partialOutput +
+                ' --commonjs handlebars/runtime --map'
         };
     };
 
@@ -51,8 +53,12 @@ export class Handlebars implements iEngine {
             textContent: Helpers
         },
         {
-            filename: this.sourceFolder + this.templateFolder,
-            textContent: 'test'
+            filename: this.sourceFolder + this.templateFolder + envSlash() + 'home' + envSlash() + 'index.hbs',
+            textContent: homeIndexPage
+        },
+        {
+            filename: this.sourceFolder + this.partialFolder + envSlash() + 'footer.hbs',
+            textContent: headerPartial
         }
     ];
 
