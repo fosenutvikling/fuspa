@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "outDir": "../../dist/cli",
+        "outDir": "../../dist/SpaProject",
         "typeRoots": [
             "../../node_modules/@types"
         ],
@@ -16,6 +16,6 @@
         "listFiles": true
     },
     "files": [
-        "cli.ts"
+        "SpaProject.ts"
     ]
 }

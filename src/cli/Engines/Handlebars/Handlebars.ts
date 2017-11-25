@@ -19,11 +19,10 @@ export class Handlebars implements iEngine {
     public readonly dependencies = ['handlebars', 'moment'];
 
     public readonly loadTemplates = `
-    const Handlebars = require('handlebars/runtime');
-    require('./templates.js');
-    require('./partials.js');
-    require('./HbsHelpers')(Handlebars);
-    `;
+const Handlebars = require('handlebars/runtime');
+require('./templates.js');
+require('./partials.js');
+require('./HbsHelpers')(Handlebars);`;
 
     public readonly assignEngine = 'Handlebars.templates';
 
@@ -71,7 +70,6 @@ export class Handlebars implements iEngine {
         this.sourceFolder + envSlash() + this.templateFolder + envSlash() + 'home',
         this.sourceFolder + envSlash() + this.partialFolder
     ];
-
 
     public constructor(sourceFolder, outputFolder) {
         this.sourceFolder = sourceFolder;
