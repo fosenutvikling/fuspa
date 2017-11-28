@@ -16,6 +16,6 @@
         "listFiles": true
     },
     "files": [
-        "SpaProject.ts"
+        "index.ts"
     ]
 }
