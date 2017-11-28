@@ -1,36 +1,60 @@
 import * as fs from 'fs';
-import { Main } from './Main';
-import { tsconfig } from './tsconfig';
-import { iEngine } from '../Engines/iEngine';
-import { envSlash, createFolder, IFileContent } from '../Functions';
+import { Main } from './ProjectFiles/Main';
+import { tsconfig } from './ProjectFiles/tsconfig';
+import { envSlash, createFolder, IFileContent } from './Functions';
+
+// Engines
+import { iEngine } from './Engines/iEngine';
+import { Handlebars } from './Engines/Handlebars/Handlebars';
 
 // tasks
-import { liveServerJs } from './tasks/liveServerJs';
-import { webpackJs } from './tasks/wepackJs';
-import { baseJs } from './tasks/baseJs';
-import { sassJs } from './tasks/sassJs';
-import { assembleJs } from './tasks/assembleJs';
-import { copyJs } from './tasks/copyJs';
+import { liveServerJs } from './ProjectFiles/tasks/liveServerJs';
+import { webpackJs } from './ProjectFiles/tasks/wepackJs';
+import { baseJs } from './ProjectFiles/tasks/baseJs';
+import { sassJs } from './ProjectFiles/tasks/sassJs';
+import { assembleJs } from './ProjectFiles/tasks/assembleJs';
+import { copyJs } from './ProjectFiles/tasks/copyJs';
 
 // styles
-import { mainScss } from './styles/mainScss';
+import { mainScss } from './ProjectFiles/styles/mainScss';
 
-import { headerHbs, layoutHbs, pageHbs } from './assemble';
+import { headerHbs, layoutHbs, pageHbs } from './ProjectFiles/assemble';
 
+export interface IConfig {
+    engine: 'handlebars',
+    container: string,
+    name: string,
+    mainFile: string
+}
+
+// TODO: set container for mainfile
+// TODO: create package.json (add dependencies)
 export class ProjectFiles {
     private projectFolder;
     private engine: iEngine;
-    private mainFile: string;
+
+    private config: IConfig;
 
     private outFolder = './dist';
     private assetsFolder = '/assets';
 
     private assembleDir;
-    public constructor(engine: iEngine, projectFolder: string, mainFile: string) {
-        this.projectFolder = projectFolder;
-        this.mainFile = mainFile;
-        this.engine = engine;
+
+    public constructor(directory: string, config: IConfig) {
+        this.config = config;
+        this.projectFolder = directory + this.config.name;
         this.assembleDir = this.projectFolder + envSlash() + 'src' + envSlash() + 'views' + envSlash() + 'assemble';
+    }
+
+    private loadEngine() {
+        switch (this.config.engine) {
+            case 'handlebars':
+                this.engine = new Handlebars('src/views', 'src/app');
+                break;
+
+            default:
+                throw Error('Unknown engine type: ' + this.config.engine);
+        }
     }
 
     public get dependencies() {
@@ -152,6 +176,21 @@ export class ProjectFiles {
         for (let i = 0; i < folders.length; ++i)
             createFolder(this.projectFolder + envSlash() + folders[i]);
 
+        return this.writeFiles(this.projectFolder, files);
+    }
+
+    private createNPMFiles() {
+
+        const npmPackage = {
+            name: 
+        };
+
+        const files: IFileContent[] = [
+            {
+                filename: 'package.json',
+                textContent: JSON.stringify(npmPackage)
+            }
+        ]
         return this.writeFiles(this.projectFolder, files);
     }
 

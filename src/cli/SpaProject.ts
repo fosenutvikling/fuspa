@@ -1,4 +1,4 @@
-import { ProjectFiles } from './ProjectFiles/ProjectFiles';
+import { ProjectFiles, IConfig } from './ProjectFiles';
 import * as npm from 'global-npm';
 import * as npmAddScript from 'npm-add-script';
 import { Handlebars } from './Engines/Handlebars/Handlebars';
@@ -7,12 +7,6 @@ import { envSlash } from './Functions';
 import * as fs from 'fs';
 import { iEngine } from './Engines/iEngine';
 
-export interface IConfig {
-    engine: 'handlebars',
-    container: string,
-    name: string,
-    mainFile: string
-}
 
 export class SpaProject {
     private engine: iEngine;
@@ -22,7 +16,7 @@ export class SpaProject {
     constructor(config: IConfig) {
         this.config = config;
         this.verifyConfig();
-        this.loadScript();
+        this.projectFiles = new ProjectFiles(process.cwd() + envSlash(), this.config);
     }
 
     private verifyConfig() {
@@ -34,25 +28,10 @@ export class SpaProject {
             throw Error('Container can only consist of characters [a-z]' + this.config.container.search(/[^a-zA-Z]+/));
     }
 
-    private loadScript() {
-        this.loadEngine();
-        this.projectFiles = new ProjectFiles(this.engine, process.cwd() + envSlash() + this.config.name, this.config.mainFile);
-    }
-
-    private loadEngine() {
-        switch (this.config.engine) {
-            case 'handlebars':
-                this.engine = new Handlebars('src/views', 'src/app');
-                break;
-
-            default:
-                throw Error('Unknown engine type: ' + this.config.engine);
-        }
-    }
 
     public create() {
         this.runNpm();
-        //this.projectFiles.write();
+        this.projectFiles.write();
     }
 
     private runNpm() {
