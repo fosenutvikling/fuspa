@@ -59,8 +59,8 @@ export class ProjectFiles {
 
     public get dependencies() {
         return ['live-server', 'webpack', 'node-sass',
-            'assemble', 'gulp-extname'
-        ]
+            'assemble', 'gulp-extname', 'chalk', 'ncp'
+        ];
     }
 
     private createProjectFolders() {
@@ -101,10 +101,11 @@ export class ProjectFiles {
             {
                 filename: 'assemble.js',
                 textContent: assembleJs([{
+                    // As the task file resides in the task folder, need to reference one folder "back"
                     task: 'default',
-                    pages: './src/views/assemble/pages/*.hbs',
-                    layout: './src/views/assemble/layouts/baseLayout.hbs',
-                    partials: './src/views/assemble/partials/*.hbs'
+                    pages: '../src/views/assemble/pages/*.hbs',
+                    layout: '../src/views/assemble/layouts/baseLayout.hbs',
+                    partials: '../src/views/assemble/partials/*.hbs'
                 }], this.outFolder)
             },
             {
@@ -218,7 +219,7 @@ export class ProjectFiles {
                 cwd: this.projectFolder,
                 saveDev: true
             });
-            
+
             return true;
         }
         catch (ex) {
@@ -249,7 +250,7 @@ export class ProjectFiles {
             'build:html': './node_modules/.bin/assemble --cwd=tasks',
             'build:webpack': './node_modules/.bin/webpack --config tasks/webpack.js',
             'debug': './node_modules/.bin/webpack --config tasks/webpack.js --watch',
-            'build:style': 'node tasks/node-sass.js',
+            'build:style': 'node tasks/sass.js',
             'copy': 'node tasks/copy.js',
             'start': 'node tasks/liveServer.js',
             'init': 'npm run copy && npm run build:html && npm run build:style && npm run build:webpack && npm run spa:engine'
