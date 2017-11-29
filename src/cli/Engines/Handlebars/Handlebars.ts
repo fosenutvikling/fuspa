@@ -4,7 +4,7 @@ import { envSlash } from '../../Functions';
 import { homeIndexPage, headerPartial } from './PagesHbs';
 
 export class Handlebars implements iEngine {
-    private handlebarsBin = '../node_modules/.bin/handlebars ';
+    private handlebarsBin = './node_modules/.bin/handlebars ';
     private templateFolder = 'templates';
     private partialFolder = 'partials';
 
@@ -46,7 +46,7 @@ require('./HbsHelpers')(Handlebars);`;
                 this.partialOutput +
                 ' --commonjs handlebars/runtime --map',
 
-            'spa:engine': 'nmp run spa:engine:templates && npm run spa:engine:partials'
+            'spa:engine': 'npm run spa:engine:templates && npm run spa:engine:partials'
         };
     };
 
