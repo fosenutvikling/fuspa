@@ -33,7 +33,7 @@ require('./HbsHelpers')(Handlebars);`;
                 './' + this.sourceFolder +
                 '/' + this.templateFolder +
                 ' --extension hbs --output ' +
-                this.outputFolder +
+                this.outputFolder + '/' +
                 this.templateOutput +
                 ' --commonjs handlebars/runtime --min',
 
@@ -42,7 +42,7 @@ require('./HbsHelpers')(Handlebars);`;
                 './' + this.sourceFolder +
                 '/' + this.partialFolder +
                 ' --extension hbs --output ' +
-                this.outputFolder +
+                this.outputFolder + '/' +
                 this.partialOutput +
                 ' --commonjs handlebars/runtime --map',
 
