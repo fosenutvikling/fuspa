@@ -1,4 +1,4 @@
-export const Main = (loadTemplates, assignEngine) => {
+export const Main = (loadTemplates, assignEngine, container) => {
     return `import * as spa from 'spa';
 const routeMapper = spa.RouteMapper.instance;
 const route = spa.Route.instance;
@@ -7,7 +7,7 @@ const route = spa.Route.instance;
 ${loadTemplates}
 
 spa.Route.options = {
-    container: 'app',
+    container: '${container}',
     templateEngine: ${assignEngine}
 };
 

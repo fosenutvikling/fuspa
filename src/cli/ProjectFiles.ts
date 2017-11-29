@@ -20,6 +20,8 @@ import { mainScss } from './ProjectFiles/styles/mainScss';
 
 import { headerHbs, layoutHbs, pageHbs } from './ProjectFiles/assemble';
 
+const npm = require('npm-programmatic');
+
 export interface IConfig {
     engine: 'handlebars',
     container: string,
@@ -27,8 +29,6 @@ export interface IConfig {
     mainFile: string
 }
 
-// TODO: set container for mainfile
-// TODO: create package.json (add dependencies)
 export class ProjectFiles {
     private projectFolder;
     private engine: iEngine;
@@ -132,8 +132,8 @@ export class ProjectFiles {
     private createSrcFiles() {
         let files: IFileContent[] = [
             {
-                filename: this.mainFile,
-                textContent: Main(this.engine.loadTemplates, this.engine.assignEngine)
+                filename: this.config.mainFile,
+                textContent: Main(this.engine.loadTemplates, this.engine.assignEngine, this.config.container)
             }
         ];
 
@@ -144,7 +144,7 @@ export class ProjectFiles {
         let files: IFileContent[] = [
             {
                 filename: 'tsconfig.json',
-                textContent: tsconfig('src/app/' + this.mainFile)
+                textContent: tsconfig('src/app/' + this.config.mainFile)
             }
         ];
 
@@ -181,8 +181,20 @@ export class ProjectFiles {
 
     private createNPMFiles() {
 
+        let scripts = {};
+        Object.assign(scripts, this.engine.scripts(), this.npmScripts());
+
+
         const npmPackage = {
-            name: 
+            name: this.config.name,
+            version: '1.0.0',
+            description: '',
+            main: 'src/app/' + this.config.mainFile,
+            scripts: scripts,
+            author: '',// who am i
+            license: '', // WHAT TO USE?
+            dependencies: {},
+            devDependencies: {}
         };
 
         const files: IFileContent[] = [
@@ -190,8 +202,30 @@ export class ProjectFiles {
                 filename: 'package.json',
                 textContent: JSON.stringify(npmPackage)
             }
-        ]
+        ];
+
         return this.writeFiles(this.projectFolder, files);
+    }
+
+    private async addNpmDependencies() {
+        try {
+            await npm.install(this.engine.dependencies, {
+                cwd: this.projectFolder,
+                save: true
+            });
+
+            await npm.install(this.dependencies, {
+                cwd: this.projectFolder,
+                saveDev: true
+            });
+            
+            return true;
+        }
+        catch (ex) {
+            console.error('Couldn\'t install dependencies', ex);
+        }
+
+        return false;
     }
 
     private writeFiles(folder: string, files: IFileContent[]) {
@@ -222,22 +256,24 @@ export class ProjectFiles {
         };
     }
 
-    public write() {
+    private write() {
         return this.createProjectFolders() &&
             this.createTaskFiles() &&
             this.createStyleFiles() &&
             this.createSrcFiles() &&
             this.createProjectFiles() &&
             this.createAssembleFiles() &&
-            this.createEngineFiles(); // ./src/views. should probably do something else..
+            this.createEngineFiles() &&
+            this.createNPMFiles(); // ./src/views. should probably do something else..
     }
 
-    public scripts() {
-        return {
-            'build:assemble': './node_modules/.bin/assemble --cwd=tasks',
-            'build:sass': 'node tasks/node-sass.js',
-            'build:webpack': './node_modules/.bin/webpack --config tasks/webpack.js',
-            'start': 'node tasks/liveServer.js'
+    public create() {
+        this.loadEngine();
+        if (this.write()) {
+            this.addNpmDependencies();
+        }
+        else {
+            throw Error('Not able to create project files');
         }
     }
 }

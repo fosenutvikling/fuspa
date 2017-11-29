@@ -1,6 +1,7 @@
 require('source-map-support').install();
 import * as commander from 'commander';
-import { SpaProject, IConfig } from './SpaProject';
+import { SpaProject } from './SpaProject';
+import { IConfig } from './ProjectFiles';
 import { envSlash } from './Functions';
 
 const defaultConfig: IConfig = {
@@ -38,5 +39,6 @@ try {
     console.log('Couldn\'t locate config file, using default config');
 }
 
+console.log('Creating project with config: ', config);
 const project = new SpaProject(config);
 project.create();
