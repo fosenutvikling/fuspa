@@ -159,7 +159,7 @@ export class ProjectFiles {
                 textContent: headerHbs()
             },
             {
-                filename: 'pages/simplePage.hbs',
+                filename: 'pages/index.hbs',
                 textContent: pageHbs()
             },
             {
