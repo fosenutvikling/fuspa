@@ -9,7 +9,8 @@ export interface AssembleOptions {
     partials: string,
     layout: string,
     pages: string,
-    task: string
+    task: string,
+    layoutPath: string
 };
 
 const createTask = (option: AssembleOptions, destination) =>
@@ -19,12 +20,12 @@ app.task('${option.task}', () => {
     app.option('engine', 'hbs');
 
     app.partials('${option.partials}');
-    app.layout('${option.layout}');
+    app.layout('${option.layoutPath}');
 
-    app.option('layout', '${option.task}');
+    app.option('layout', '${option.layout}');
 
     app.src('${option.pages}', {
-        layout: '${option.task}'
+        layout: '${option.layout}'
     })
         .pipe(extname())
         .pipe(app.renderFile('.hbs'))
