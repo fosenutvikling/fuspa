@@ -12,16 +12,16 @@ sass.render({
     outFile: '${output}'
 }, function (error, result) { // node-style callback from v3.0.0 onwards 
     if (error) {
-        base.error('Error creating style file\`n\`');
+        base.error('Error creating style file\\n');
         console.log(error.status); // used to be "code" in v2x and below 
         console.log(error.column);
         console.log(error.message);
         console.log(error.line);
         console.log(error);
     } else {
-        base.success('Style file successfully compiled\`n\`');
+        base.success('Style file successfully compiled\\n');
         base.info('Number of files: ');
-        base.print(result.stats.includedFiles.length + '\`n\`');
+        base.print(result.stats.includedFiles.length + '\\n');
         base.info('Compiled in: ');
         base.print(result.stats.duration + 'ms');
 
