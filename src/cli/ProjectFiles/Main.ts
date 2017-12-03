@@ -1,16 +1,16 @@
 export const Main = (loadTemplates, assignEngine, container) => {
     return `import * as spa from 'spa';
-const routeMapper = spa.RouteMapper.instance;
-const route = spa.Route.instance;
-
-// Load engine specific templates
-${loadTemplates}
 
 spa.Route.options = {
     container: '${container}',
     templateEngine: ${assignEngine}
 };
 
+const routeMapper = spa.RouteMapper.instance;
+const route = spa.Route.instance;
+
+// Load engine specific templates
+${loadTemplates}
 
 routeMapper.addRoute('/', () => {
     route.title='Home';
