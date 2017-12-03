@@ -22,7 +22,7 @@ export class Handlebars implements iEngine {
 const Handlebars = require('handlebars/runtime');
 require('./templates.js');
 require('./partials.js');
-require('./HbsHelpers')(Handlebars);`;
+require('./hbsHelpers.ts')(Handlebars);`;
 
     public readonly assignEngine = 'Handlebars.templates';
 
