@@ -2,10 +2,12 @@
   "name": "spa",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/spa.min.js",
-  "typings": "dist/spa.d.ts",
+  "main": "lib-esm/main.js",
   "scripts": {
-    "build:cli": "./node_modules/.bin/tsc -p ./src/cli/tsconfig.json",
+    "build:es5": "tsc --declaration",
+    "build:es6": "tsc -m es6 --outDir lib-esm --moduleResolution node --declaration",
+    "build:umd": "webpack",
+    "build": "npm run build:es5 && npm run build:es6 && npm run build:umd",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -23,19 +25,16 @@
   },
   "homepage": "https://github.com/jonaskirkemyr/spa#readme",
   "dependencies": {
-    "commander": "^2.11.0",
     "handlebars": "^4.0.11",
     "hasher": "^1.2.0",
     "minimist": "^1.2.0",
-    "source-map-support": "^0.5.0",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^8.0.47",
-    "global-npm": "^0.3.0",
-    "npm-add-script": "^1.1.0",
-    "ts-loader": "^3.1.0",
+    "ts-loader": "^3.2.0",
     "typescript": "^2.5.3",
-    "webpack": "^3.8.1"
+    "uglifyjs-webpack-plugin": "^1.1.2",
+    "webpack": "^3.10.0"
   }
 }
