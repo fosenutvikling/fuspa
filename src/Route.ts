@@ -17,6 +17,7 @@ export class Route {
     }
 
     private constructor() {
+        if (Route.options == null) throw new Error('Route options not set');
         if (Route.options.container == null) throw new Error('Container not set');
         if (Route.options.templateEngine == null) throw new Error('TemplateEngine not set');
 
