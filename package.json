@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib-esm/main.js",
+  "types": "lib-esm/main.d.ts",
   "scripts": {
     "build:es5": "tsc --declaration",
     "build:es6": "tsc -m es6 --outDir lib-esm --moduleResolution node --declaration",
