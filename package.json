@@ -1,7 +1,7 @@
 {
-  "name": "spa",
+  "name": "fuspa",
   "version": "1.0.0",
-  "description": "",
+  "description": "Single-Page-Application library written in TypeScript. Use this template to quickly create your own SPA with minimal effort.",
   "main": "lib-esm/main.js",
   "types": "lib-esm/main.d.ts",
   "scripts": {
@@ -9,6 +9,7 @@
     "build:es6": "tsc -m es6 --outDir lib-esm --moduleResolution node --declaration",
     "build:umd": "webpack",
     "build": "npm run build:es5 && npm run build:es6 && npm run build:umd",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -17,14 +18,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jonaskirkemyr/spa.git"
+    "url": "git+ssh://git@github.com:fosenutvikling/fuspa.git"
   },
   "author": "Jonas Kirkemyr <jonas@kirkemyr.no>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jonaskirkemyr/spa/issues"
+    "url": "https://github.com/fosenutvikling/fuspa/issues"
   },
-  "homepage": "https://github.com/jonaskirkemyr/spa#readme",
+  "homepage": "https://github.com/fosenutvikling/fuspa#readme",
   "dependencies": {
     "handlebars": "^4.0.11",
     "hasher": "^1.2.0",
