@@ -27,9 +27,7 @@
   },
   "homepage": "https://github.com/fosenutvikling/fuspa#readme",
   "dependencies": {
-    "handlebars": "^4.0.11",
     "hasher": "^1.2.0",
-    "minimist": "^1.2.0",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
