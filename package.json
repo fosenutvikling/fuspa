@@ -1,6 +1,6 @@
 {
   "name": "fuspa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Single-Page-Application library written in TypeScript. Use this template to quickly create your own SPA with minimal effort.",
   "main": "lib-esm/main.js",
   "types": "lib-esm/main.d.ts",
