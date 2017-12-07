@@ -31,10 +31,10 @@ export class RouteMapper {
 
     private setupListeners() {
         //add hash change listener
-        hasher.changed.add(this.onHashChange);
+        hasher.changed.add((newHash, oldHash) => this.onHashChange(newHash, oldHash));
 
         //add initialized listener (to grab initial value in case it is already set)
-        hasher.initialized.add(this.onHashChange);
+        hasher.initialized.add((newHash, oldHash) => this.onHashChange(newHash, oldHash));
         hasher.init(); //initialize hasher (start listening for history changes)
     }
 
@@ -46,8 +46,11 @@ export class RouteMapper {
 
         if (this._runOnChange !== null) this._runOnChange();
 
-        this.parse(newHash);
-        // else: emit event (to render notfound page)
+        /**
+         * Append foreward slash, as it is not added by hasher, and UrlParser doesn't support an empty string
+         * Making it possible to match a "default page" => /
+         */
+        this.parse('/' + newHash);
     }
 
     private parse(check: string) {
